@@ -1,0 +1,14 @@
+{
+  "name": "psychiatry-group-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "nodemailer": "^6.9.15",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "@vercel/node": "^13.0.1"
+  }
+}
