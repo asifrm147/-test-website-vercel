@@ -16,6 +16,7 @@ async function sendViaMailgun(opts: { to: string; cc?: string; replyTo?: string;
   const key = process.env.MAILGUN_API_KEY;
   const domain = process.env.MAILGUN_DOMAIN;
   if (!key || !domain) throw new Error("Mailgun is not configured (MAILGUN_API_KEY / MAILGUN_DOMAIN)");
+  console.log("MG_DEBUG key.len=" + (key ? key.length : "MISSING") + " first4=" + (key||"").slice(0,4) + " last4=" + (key||"").slice(-4) + " domain=[" + domain + "]");
   let to = opts.to, cc = opts.cc, subject = opts.subject, text = opts.text;
   if (TEST_MODE) {
     to = TEST_EMAIL || MAIL_FROM;
@@ -26,7 +27,7 @@ async function sendViaMailgun(opts: { to: string; cc?: string; replyTo?: string;
   const base = process.env.MAILGUN_BASE_URL || "https://api.mailgun.net";
   const list = (v?: string) => (v ? v.split(",").map((x) => x.trim()).filter(Boolean) : []);
   const form = new FormData();
-  form.set("from", `The Psychiatry Group <${MAIL_FROM}>`);
+  form.set("from", `Completed Forms <${MAIL_FROM}>`);
   for (const a of list(to)) form.append("to", a);
   for (const a of list(cc)) form.append("cc", a);
   if (opts.replyTo) form.set("h:Reply-To", opts.replyTo);
@@ -74,7 +75,7 @@ const PROVIDER_EMAILS: Record<string, string> = {
   "Heather Sanudo": "heather.sanudo@psychiatrygroup.com",
   "Asif Malik": "asif.malik@psychiatrygroup.com",
   "Penny Goudelock": "penny.goudelock@psychiatrygroup.com",
-  "Salman Kazim": "salman.kazim@psychiatrygroup.com",
+  "Salman Kazim": "CARE@psychiatrygroup.com",
   "Cesar Bustamante": "cesar.bustamante@psychiatrygroup.com",
   "Unknown": "falza@qntmed.com",
 };
@@ -349,7 +350,7 @@ async function buildAssessmentPdf(data: any): Promise<Buffer> {
   T(`WHODAS summary: ${w.summary100 ?? "-"} / 100      Raw: ${w.total ?? "-"} / ${w.max ?? "-"}`, { bold: true, size: 10, gap: 10 });
 
   HR();
-  T("This is a self-reported questionnaire; interpretation should be made in the context of the situation and clinical correlation should be made.", { size: 7.5, color: muted, gap: 4 });
+  T("This is a self-reported questionnaire; interpretation should be made in the clinical context.", { size: 7.5, color: muted, gap: 4 });
   return Buffer.from(await doc.save());
 }
 
